@@ -1,0 +1,107 @@
+body {
+  font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial,  sans-serif;
+  margin: 2em auto;
+  max-width: 600px;
+  font-size: 16px;
+  line-height: 150%;;
+}
+form {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+input {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  font-size: 16px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  color: #999;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+label {
+  font-weight: 600;
+}
+input[type=submit] {
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 14px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+input[type=submit]:hover {
+  background-color: #45a049;
+  cursor: pointer;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 1em;
+  font-size: 16px;
+}
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+th {
+  background-color: #f2f2f2;
+}
+.delete-user {
+  cursor: pointer;
+  font-weight: 600;
+  &:hover {
+    color: red;
+  }
+}
+.error-msg {
+  color: red;
+  font-weight: 600;
+  font-size: 1em;
+}
+
+@media all and (max-width: 600px) {
+  body {
+    margin: 1rem;
+    font-size: 80%;
+  }
+  placeholder {
+    font-size: 80%;
+  }
+  table, thead, tbody, th, td, tr {
+      display: block;
+    }
+    thead {
+      display: none; /* hide headers on mobile */
+    }
+    tr {
+      margin-bottom: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    td {
+      border: none;
+      justify-content: space-between;
+      padding: 8px 0;
+      width: 100%;
+    }
+    td::before {
+      content: attr(data-label);
+      font-weight: bold;
+      flex: 1;
+      text-align: left;
+      color: #333;
+    }
+    td:last-child {
+      border-bottom: none;
+    }
+}
