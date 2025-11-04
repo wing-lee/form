@@ -8,8 +8,21 @@ export const validateEmail = email => {
   return emailPattern.test(email);
 };
 
-// Phone number validate (11 digit format)
-export const validatePhone = phone => /^\d{11}$/.test(phone);
+// Phone number validate
+export const validatePhone = phone => /^0\d{10}$/.test(phone);
+
+// Age checking 
+export const validateAge = dob => {
+  const birthDate = new Date(dob);
+  const ageDifMs = Date.now() - birthDate.getTime();
+  const ageDate = new Date(ageDifMs);
+  const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+  if (age < 18 || age > 100) {
+    console.log(age);
+    return false;
+  }
+  return true;
+}
 
 /* ======= Main codes ======= */
 
@@ -21,6 +34,7 @@ window.addEventListener('load', () => {
   const emailInput = document.getElementById('email');
   const emailError = document.getElementById('emailError');
   const dobInput = document.getElementById('dob');
+  const ageError = document.getElementById('ageError');
   const phoneInput = document.getElementById('phone');
   const phoneError = document.getElementById('phoneError');
 
@@ -54,6 +68,9 @@ window.addEventListener('load', () => {
   testForm.addEventListener('submit', e => {
     e.preventDefault(); // prevent form reload
     
+    // Clear old errors
+    document.querySelectorAll(".error").forEach(e => e.textContent = "");
+    
     // collect form values
     const userName = document.getElementById('name').value.trim();
     const userEmail = emailInput.value.trim();
@@ -72,13 +89,28 @@ window.addEventListener('load', () => {
       return;
     }
 
+    // age validation
+    if (validateAge(userDOB)) {
+      ageError.textContent = '';
+    } else {
+      ageError.textContent = 'You must be between 18 and 100 years old.';
+      dobInput.focus();
+      return;
+    }
+
     // phone validation
     if (validatePhone(userPhone)) {
       phoneError.textContent = '';
     } else {
-      phoneError.textContent = 'Please enter a 11-digit phone number';
+      phoneError.textContent = 'Please enter a valid UK phone number (11 digits, starting with 0).';
       phoneInput.focus();
       return;
+    }
+
+    // GDPR consent
+    if (!consent) {
+      valid = false;
+      document.getElementById("consentError").textContent = "You must consent before submitting.";
     }
 
     users.push(user); // add input to array

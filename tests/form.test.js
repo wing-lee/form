@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { validateEmail, validatePhone } from '../assets/form.js';
+import { validateEmail, validateAge, validatePhone } from '../assets/form.js';
 
 describe('Form validation', () => {
   test('validates correct email format', () => {
@@ -12,6 +12,16 @@ describe('Form validation', () => {
   test('invalid email returns false', () => {
     expect(validateEmail('invalid-email')).toBe(false);
     expect(validateEmail('user@com')).toBe(false);
+  });
+
+  test('validates age younger than 18', () => {
+    expect(validateAge('2007-01-31')).toBe(true);
+    expect(validateAge('2010-10-31')).toBe(false);
+  });
+
+  test('validates age older than 100', () => {
+    expect(validateAge('1947-01-31')).toBe(true);
+    expect(validateAge('1924-01-01')).toBe(false);
   });
 
   test('validates 11-digit phone numbers', () => {
@@ -35,8 +45,11 @@ let testForm, emailInput, phoneInput, dobInput, nameInput, output, emailError, p
         <input id="email" />
         <span id="emailError"></span>
         <input id="dob" type="date" />
+        <span id="ageError"></span>
         <input id="phone" />
         <span id="phoneError"></span>
+        <input type="checkbox" id="consent">consent</button>
+        <span id="consentError"></span>
         <button type="submit">Submit</button>
       </form>
       <table id="usersTable">
@@ -53,19 +66,23 @@ let testForm, emailInput, phoneInput, dobInput, nameInput, output, emailError, p
     phoneInput = document.getElementById('phone');
     dobInput = document.getElementById('dob');
     nameInput = document.getElementById('name');
+    consent = document.getElementById('consent');
     output = document.querySelector('#usersTable tbody');
     emailError = document.getElementById('emailError');
+    ageError = document.getElementById('ageError');
     phoneError = document.getElementById('phoneError');
+    consentError = document.getElementById('consentError');
 
     // Trigger window load event to run main code
     window.dispatchEvent(new Event('load'));
   });
 
-  test('should add a user to the table after valid submission', () => {
+  test('should add a user to the table after consent checked and valid submission', () => {
     nameInput.value = 'John Doe';
     emailInput.value = 'john@example.com';
     dobInput.value = '1990-01-01';
     phoneInput.value = '01234567890';
+    consent.checked = true;
 
     testForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
 
@@ -82,6 +99,7 @@ let testForm, emailInput, phoneInput, dobInput, nameInput, output, emailError, p
     emailInput.value = 'bademail';
     dobInput.value = '1990-01-01';
     phoneInput.value = '01234567890';
+    consent.checked = true;
 
     testForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
 
@@ -94,11 +112,25 @@ let testForm, emailInput, phoneInput, dobInput, nameInput, output, emailError, p
     emailInput.value = 'jane@example.com';
     dobInput.value = '1990-01-01';
     phoneInput.value = '1234';
+    consent.checked = true;
 
     testForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
 
     expect(output.querySelectorAll('tr').length).toBe(0);
-    expect(phoneError.textContent).toBe('Please enter a 11-digit phone number');
+    expect(phoneError.textContent).toBe('Please enter a valid UK phone number (11 digits, starting with 0).');
+  });
+
+  test('user cannot be older than 100', () => {
+    nameInput.value = 'Peter';
+    emailInput.value = 'peter@example.com';
+    dobInput.value = '1923-01-01';
+    phoneInput.value = '01234784569';
+    consent.checked = true;
+
+    testForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+
+    expect(output.querySelectorAll('tr').length).toBe(0);
+    expect(ageError.textContent).toBe('You must be between 18 and 100 years old.');
   });
 
   test('should delete a user when delete is clicked', () => {
