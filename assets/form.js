@@ -3,16 +3,16 @@
 /* ======= Validation functions ======= */
 
 // Email format checking
-export const validateEmail = email => {
+const validateEmail = email => {
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return emailPattern.test(email);
 };
 
 // Phone number validate
-export const validatePhone = phone => /^0\d{10}$/.test(phone);
+const validatePhone = phone => /^0\d{10}$/.test(phone);
 
 // Age checking 
-export const validateAge = dob => {
+const validateAge = dob => {
   const birthDate = new Date(dob);
   const ageDifMs = Date.now() - birthDate.getTime();
   const ageDate = new Date(ageDifMs);
