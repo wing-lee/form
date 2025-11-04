@@ -18,7 +18,6 @@ const validateAge = dob => {
   const ageDate = new Date(ageDifMs);
   const age = Math.abs(ageDate.getUTCFullYear() - 1970);
   if (age < 18 || age > 100) {
-    console.log(age);
     return false;
   }
   return true;
